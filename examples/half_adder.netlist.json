@@ -1,0 +1,61 @@
+{
+  "circuit": "half_adder",
+  "components": [
+    {
+      "id": "a",
+      "type": "input",
+      "label": "a"
+    },
+    {
+      "id": "b",
+      "type": "input",
+      "label": "b"
+    },
+    {
+      "id": "g1",
+      "type": "xor",
+      "inputs": 2
+    },
+    {
+      "id": "g2",
+      "type": "and",
+      "inputs": 2
+    },
+    {
+      "id": "s",
+      "type": "output",
+      "label": "sum"
+    },
+    {
+      "id": "c",
+      "type": "output",
+      "label": "carry"
+    }
+  ],
+  "connections": [
+    [
+      "a",
+      "g1.in0"
+    ],
+    [
+      "b",
+      "g1.in1"
+    ],
+    [
+      "a",
+      "g2.in0"
+    ],
+    [
+      "b",
+      "g2.in1"
+    ],
+    [
+      "g1.out",
+      "s"
+    ],
+    [
+      "g2.out",
+      "c"
+    ]
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "circuit": "xnor3",
+  "components": [
+    {
+      "id": "a",
+      "type": "input",
+      "label": "a"
+    },
+    {
+      "id": "b",
+      "type": "input",
+      "label": "b"
+    },
+    {
+      "id": "c",
+      "type": "input",
+      "label": "c"
+    },
+    {
+      "id": "g1",
+      "type": "xor",
+      "inputs": 3
+    },
+    {
+      "id": "g2",
+      "type": "not"
+    },
+    {
+      "id": "y",
+      "type": "output",
+      "label": "y"
+    }
+  ],
+  "connections": [
+    [
+      "a",
+      "g1.in0"
+    ],
+    [
+      "b",
+      "g1.in1"
+    ],
+    [
+      "c",
+      "g1.in2"
+    ],
+    [
+      "g1.out",
+      "g2.in0"
+    ],
+    [
+      "g2.out",
+      "y"
+    ]
+  ]
+}

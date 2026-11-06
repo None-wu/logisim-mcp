@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logisim-evolution-mcp"
+version = "1.2.1"
+description = "MCP server exposing Logisim-evolution (digital logic simulator) to AI agents"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+logisim-mcp = "logisim_mcp.cli:main"
+
+[tool.setuptools]
+packages = ["logisim_mcp"]

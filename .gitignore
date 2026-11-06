@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# 运行产物
+out/
+*.log
+*.vec.tmp
+
+# 工作区/编辑器
+.workbuddy/
+.idea/
+.vscode/

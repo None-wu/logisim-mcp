@@ -1,0 +1,43 @@
+{
+  "circuit": "and4bit",
+  "components": [
+    {
+      "id": "a",
+      "type": "input",
+      "label": "a",
+      "width": 4
+    },
+    {
+      "id": "b",
+      "type": "input",
+      "label": "b",
+      "width": 4
+    },
+    {
+      "id": "g",
+      "type": "and",
+      "inputs": 2,
+      "width": 4
+    },
+    {
+      "id": "y",
+      "type": "output",
+      "label": "y",
+      "width": 4
+    }
+  ],
+  "connections": [
+    [
+      "a",
+      "g.in0"
+    ],
+    [
+      "b",
+      "g.in1"
+    ],
+    [
+      "g.out",
+      "y"
+    ]
+  ]
+}

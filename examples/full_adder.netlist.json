@@ -1,0 +1,105 @@
+{
+  "circuit": "full_adder",
+  "components": [
+    {
+      "id": "a",
+      "type": "input",
+      "label": "a"
+    },
+    {
+      "id": "b",
+      "type": "input",
+      "label": "b"
+    },
+    {
+      "id": "cin",
+      "type": "input",
+      "label": "cin"
+    },
+    {
+      "id": "x1",
+      "type": "xor",
+      "inputs": 2
+    },
+    {
+      "id": "x2",
+      "type": "xor",
+      "inputs": 2
+    },
+    {
+      "id": "a1",
+      "type": "and",
+      "inputs": 2
+    },
+    {
+      "id": "a2",
+      "type": "and",
+      "inputs": 2
+    },
+    {
+      "id": "o1",
+      "type": "or",
+      "inputs": 2
+    },
+    {
+      "id": "sum",
+      "type": "output",
+      "label": "sum"
+    },
+    {
+      "id": "cout",
+      "type": "output",
+      "label": "cout"
+    }
+  ],
+  "connections": [
+    [
+      "a",
+      "x1.in0"
+    ],
+    [
+      "b",
+      "x1.in1"
+    ],
+    [
+      "x1.out",
+      "x2.in0"
+    ],
+    [
+      "cin",
+      "x2.in1"
+    ],
+    [
+      "x2.out",
+      "sum"
+    ],
+    [
+      "a",
+      "a1.in0"
+    ],
+    [
+      "b",
+      "a1.in1"
+    ],
+    [
+      "x1.out",
+      "a2.in0"
+    ],
+    [
+      "cin",
+      "a2.in1"
+    ],
+    [
+      "a1.out",
+      "o1.in0"
+    ],
+    [
+      "a2.out",
+      "o1.in1"
+    ],
+    [
+      "o1.out",
+      "cout"
+    ]
+  ]
+}
