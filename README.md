@@ -18,9 +18,12 @@
 ### npm / npx（推荐，跨平台）
 
 ```bash
-npx logisim-mcp --doctor        # 免安装直接自检
-npm i -g logisim-mcp            # 全局安装后可直接调用 logisim-mcp
+npm i -g github:None-wu/logisim-mcp        # 全局安装 → 得到 logisim-mcp 命令
+npx -y github:None-wu/logisim-mcp --doctor # 免安装直接跑一次
 ```
+
+在本仓库目录里也可以 `npm i -g .` 或 `npx . --doctor`。
+（若日后发布到 npm registry，则简化为 `npm i -g logisim-mcp` / `npx logisim-mcp`。）
 
 npm 包是**分发壳**：真正的服务器是包内的 Python 实现（纯标准库、零依赖）。
 启动时会依次尝试 `LOGISIM_MCP_PYTHON` → `py -3` → `python3` → `python`，
@@ -40,13 +43,13 @@ python server.py --doctor
 
 ```bash
 # 自检：确认 Python 版本与 Logisim 可执行文件
-npx logisim-mcp --doctor         # 或 python server.py --doctor
+npx -y github:None-wu/logisim-mcp --doctor   # 或 python server.py --doctor
 
 # stdio 模式（默认，供 MCP 客户端拉起）
-npx logisim-mcp
+npx -y github:None-wu/logisim-mcp
 
 # HTTP 模式（可选）
-npx logisim-mcp --http 8765      # 端点 http://127.0.0.1:8765/mcp
+npx -y github:None-wu/logisim-mcp --http 8765   # 端点 http://127.0.0.1:8765/mcp
 
 # 回归自测（41 项 Python 断言 + 4 项 npm 包装冒烟测试）
 python tests/selftest.py
@@ -75,7 +78,7 @@ npm test
   "mcpServers": {
     "logisim": {
       "command": "npx",
-      "args": ["-y", "logisim-mcp"],
+      "args": ["-y", "github:None-wu/logisim-mcp"],
       "timeout": 120000
     }
   }

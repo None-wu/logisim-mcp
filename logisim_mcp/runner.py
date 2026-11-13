@@ -181,7 +181,8 @@ def find_runtime(explicit: Optional[str] = None) -> Runtime:
                 return Runtime("jar", rt.path, java)
     raise LogisimNotFound(
         "未找到 Logisim-evolution。请安装官方发行版，或设置环境变量 LOGISIM_EXE 指向可执行文件，"
-        "或在 ~/.logisim-mcp.json 写入 {\"exe\": \"C:/path/to/logisim-evolution.exe\"}"
+        "或在 ~/.logisim-mcp.json 写入 {\"exe\": \"C:/path/to/logisim-evolution.exe\"}。"
+        "（已搜索：当前目录及上两级、本包所在目录附近、常见安装路径、PATH）"
     )
 
 
