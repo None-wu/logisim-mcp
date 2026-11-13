@@ -30,6 +30,28 @@ npm 包是**分发壳**：真正的服务器是包内的 Python 实现（纯标�
 并校验 Python ≥ 3.9；相对路径参数以**调用者的当前工作目录**为基准。
 需要 Node ≥ 16.7 与 Python ≥ 3.9（不需要 pip install）。
 
+### 一键安装到所有 MCP 客户端（`--install`）
+
+```bash
+npx -y github:None-wu/logisim-mcp --install     # 探测本机已装的客户端并写入配置
+# 全局安装后也可: logisim-mcp --install
+```
+
+自动探测：**WorkBuddy、Claude Desktop、Claude Code、Cursor、Windsurf、Cline、
+VS Code（Copilot MCP）**。行为约定：
+
+- 只动客户端自己的目录（Claude Code 的状态文件 `~/.claude.json` 仅在已存在时更新，绝不凭空创建）；
+- 写入前自动备份为 `<配置文件>.bak-logisim`，其他已有 MCP 服务器条目原样保留；
+- `--client <id>` 只写指定客户端（id：`workbuddy` / `claude-desktop` / `claude-code` / `cursor` / `windsurf` / `cline` / `vscode`）；
+- `--dry-run` 预演不落盘；`--uninstall` 移除条目；`--project` 写当前目录的 `.mcp.json`（Claude Code / Cursor 支持项目级）；
+- WorkBuddy 用户安装后需到「连接器管理 → 自定义连接器」对 `logisim` 点一次「信任」。
+
+也可以把这句话直接发给任何 agent，让它替你完成：
+
+> 帮我安装 logisim-mcp：先运行 `npx -y github:None-wu/logisim-mcp --install`，
+> 再运行 `npx -y github:None-wu/logisim-mcp --doctor` 验证环境（找到 Logisim 即成功），
+> 把结果和需要手动做的步骤告诉我。
+
 ### 从源码（无 Node 环境）
 
 ```bash
@@ -51,7 +73,7 @@ npx -y github:None-wu/logisim-mcp
 # HTTP 模式（可选）
 npx -y github:None-wu/logisim-mcp --http 8765   # 端点 http://127.0.0.1:8765/mcp
 
-# 回归自测（41 项 Python 断言 + 4 项 npm 包装冒烟测试）
+# 回归自测（41 项 Python 断言 + 5 项 npm 包装冒烟测试）
 python tests/selftest.py
 npm test
 ```

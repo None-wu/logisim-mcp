@@ -114,6 +114,13 @@ function rpc(requests, timeoutMs = 40000) {
     doctorJson ? `found=${doctorJson.found}` : (doctor.stderr || '').slice(0, 200)
   );
 
+  const dry = spawnSync(process.execPath, [BIN, '--install', '--dry-run'], { encoding: 'utf8', timeout: 30000 });
+  check(
+    '--install --dry-run 预演不落盘',
+    dry.status === 0 && /dry-run，未实际写入/.test(dry.stdout || ''),
+    (dry.stdout || '').split('\n').find((l) => l.startsWith('[')) || ''
+  );
+
   console.log(failures === 0 ? '\nSMOKE OK' : `\nSMOKE FAILED (${failures})`);
   process.exit(failures === 0 ? 0 : 1);
 })();
