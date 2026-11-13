@@ -13,7 +13,7 @@ from .circ import Circuit, Project, load_project
 from .geometry import is_sequential, ports_of
 from .nets import build_netlist
 
-SERVER_VERSION = "1.2.1"
+SERVER_VERSION = "1.3.0"
 
 
 class ToolError(RuntimeError):

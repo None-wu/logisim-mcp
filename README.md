@@ -13,33 +13,78 @@
 
 ---
 
+## 安装
+
+### npm / npx（推荐，跨平台）
+
+```bash
+npx logisim-mcp --doctor        # 免安装直接自检
+npm i -g logisim-mcp            # 全局安装后可直接调用 logisim-mcp
+```
+
+npm 包是**分发壳**：真正的服务器是包内的 Python 实现（纯标准库、零依赖）。
+启动时会依次尝试 `LOGISIM_MCP_PYTHON` → `py -3` → `python3` → `python`，
+并校验 Python ≥ 3.9；相对路径参数以**调用者的当前工作目录**为基准。
+需要 Node ≥ 16.7 与 Python ≥ 3.9（不需要 pip install）。
+
+### 从源码（无 Node 环境）
+
+```bash
+git clone https://github.com/None-wu/logisim-mcp && cd logisim-mcp
+python server.py --doctor
+```
+
+---
+
 ## 快速开始
 
 ```bash
-# 自检：确认能找到 Logisim 可执行文件
-python server.py --doctor
+# 自检：确认 Python 版本与 Logisim 可执行文件
+npx logisim-mcp --doctor         # 或 python server.py --doctor
 
 # stdio 模式（默认，供 MCP 客户端拉起）
-python server.py
+npx logisim-mcp
 
 # HTTP 模式（可选）
-python server.py --http 8765     # 端点 http://127.0.0.1:8765/mcp
+npx logisim-mcp --http 8765      # 端点 http://127.0.0.1:8765/mcp
 
-# 回归自测（42 项断言）
+# 回归自测（41 项 Python 断言 + 4 项 npm 包装冒烟测试）
 python tests/selftest.py
+npm test
 ```
 
 ### 环境要求
 
 | 项目 | 说明 |
 |---|---|
+| Node.js | ≥ 16.7（仅 npm 包装层需要；直接用 `python server.py` 可跳过） |
 | Python | ≥ 3.9，无任何第三方包 |
 | Logisim-evolution | 官方发行版（exe / jar 均可），**v5.0.0 已验证** |
-| 定位方式 | 自动搜索同级目录与常见安装路径；也可用环境变量 `LOGISIM_EXE` 或 `~/.logisim-mcp.json`（`{"exe": "C:/path/logisim-evolution.exe"}`）指定 |
+| 定位方式 | 依次搜索：`LOGISIM_EXE` → `~/.logisim-mcp.json`（`{"exe": "C:/path/logisim-evolution.exe"}`）→ 包目录及其上级 → **当前工作目录及上两级（限深 3 层）** → `Program Files` / `/Applications` / `/usr/local/bin` → `PATH` |
 
 ---
 
 ## 客户端接入配置
+
+### 方式一：npx（推荐，无需写绝对路径）
+
+任何 stdio 客户端都可以直接用：
+
+```json
+{
+  "mcpServers": {
+    "logisim": {
+      "command": "npx",
+      "args": ["-y", "logisim-mcp"],
+      "timeout": 120000
+    }
+  }
+}
+```
+
+> Windows 上若 `npx` 不在 PATH，可写 `"command": "npx.cmd"`。
+
+### 方式二：Python 直调
 
 以下路径按你的实际安装位置修改（本机示例根目录为
 `E:/数字逻辑/logisim-evolution-5.0.0-windows-amd64/logisim-mcp`）。
@@ -119,7 +164,7 @@ Logisim **不会**在加载时补全工程骨架。`.circ` 里的这几个段落
 | `<options>` / `<circuit><a ...>` | 视图状态（网格、缩放、仿真开关）回落为全局默认 |
 
 因此 `circuit_create` 会写出**与 5.0.0 自己"新建工程 → 保存"完全一致**的骨架：13 个内置库、
-16 个默认工具条按钮、鼠标绑定、选项，且库名用 5.0 的十进制编号（`0..12`，不是 4.x 的
+15 个默认工具条按钮、鼠标绑定、选项，且库名用 5.0 的十进制编号（`0..12`，不是 4.x 的
 十六进制 `A/B/C/D`）。校验方式是拿官方 `-n`（加载后另存）过一遍，库表与工具条原样保留即视为通过。
 
 已有文件可用 `circuit_retrofit` 补齐（按 `<lib desc=...>` 重映射库索引，电路内容一字不改）：
@@ -131,7 +176,7 @@ python -m logisim_mcp retrofit old.circ                                    # 就
 
 ---
 
-## 工具清单（10 个）
+## 工具清单（9 个）
 
 | 工具 | 作用 |
 |---|---|
@@ -232,7 +277,10 @@ logisim-mcp/
 │  ├─ upgrade.py           # 老文件 → 原生骨架（库索引按 desc 重映射）
 │  └─ lint.py              # 结构检查
 ├─ examples/               # 半加器 / 全加器 / 三输入异或 / 4 位与 netlist+circ
-└─ tests/selftest.py       # 42 项端到端断言
+├─ bin/logisim-mcp.js      # npm 启动器（查找 Python 并透传 stdio）
+├─ package.json            # npm 包定义（bin / files / 无运行时依赖）
+├─ test/smoke.js           # npm 包装冒烟测试（握手 + tools/list + doctor）
+└─ tests/selftest.py       # 41 项端到端断言
 ```
 
 ## License

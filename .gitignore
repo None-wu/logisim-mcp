@@ -16,3 +16,8 @@ out/
 .workbuddy/
 .idea/
 .vscode/
+
+# Node / npm
+node_modules/
+*.tgz
+npm-debug.log*

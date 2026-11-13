@@ -68,6 +68,49 @@ def _config_path() -> Path:
     return Path.home() / ".logisim-mcp.json"
 
 
+_SKIP_DIRS = {"node_modules", "__pycache__", ".git", ".cache", ".venv", "venv", "AppData", "Windows"}
+
+
+def _scan_roots(roots: List[Path], out: List[Runtime], depth: int = 3, limit: int = 6) -> None:
+    """在若干根目录下做**限深**遍历，收集 logisim 可执行文件与 jar。
+
+    限深 + 跳过 node_modules/.git 之类目录，避免把用户工程目录整体扫一遍；
+    同时限制最多检查条目数，防止 cwd 恰好在磁盘根目录时卡住。
+    """
+    budget = 20000
+    found_exe = 0
+    found_jar = 0
+    for root in roots:
+        try:
+            if not root.is_dir() or root.parent == root:  # 盘符根目录直接跳过
+                continue
+        except OSError:
+            continue
+        base = len(root.parts)
+        try:
+            for dirpath, dirnames, filenames in os.walk(root):
+                budget -= 1
+                if budget <= 0 or (found_exe >= limit and found_jar >= limit):
+                    return
+                cur = Path(dirpath)
+                if len(cur.parts) - base >= depth:
+                    dirnames[:] = []
+                else:
+                    dirnames[:] = [
+                        d for d in dirnames if d not in _SKIP_DIRS and not d.startswith(".")
+                    ]
+                for name in sorted(filenames):
+                    low = name.lower()
+                    if low.endswith(".exe") and "logisim" in low:
+                        out.append(Runtime("exe", cur / name))
+                        found_exe += 1
+                    elif low.endswith(".jar") and "logisim" in low:
+                        out.append(Runtime("jar", cur / name))
+                        found_jar += 1
+        except OSError:
+            continue
+
+
 def _candidates() -> List[Runtime]:
     out: List[Runtime] = []
 
@@ -86,18 +129,15 @@ def _candidates() -> List[Runtime]:
     except Exception:
         pass
 
+    # 搜索顺序：包自身附近 → 当前工作目录及其上两级。
+    # 后者对 npm 全局安装很关键：包在 node_modules 里，Logisim 却在别处。
     here = Path(__file__).resolve().parent.parent
-    search_roots = [here, here.parent, here.parent.parent]
-    for root in search_roots:
-        try:
-            for p in sorted(root.glob("logisim-evolution*.exe")):
-                out.append(Runtime("exe", p))
-            for p in sorted(root.glob("**/logisim-evolution*.exe"))[:5]:
-                out.append(Runtime("exe", p))
-            for p in sorted(root.glob("**/*-all.jar"))[:5]:
-                out.append(Runtime("jar", p))
-        except OSError:
-            continue
+    cwd = Path.cwd()
+    search_roots: List[Path] = []
+    for root in (here, here.parent, here.parent.parent, cwd, cwd.parent, cwd.parent.parent):
+        if root not in search_roots:
+            search_roots.append(root)
+    _scan_roots(search_roots, out)
 
     program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
     for p in (

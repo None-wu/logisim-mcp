@@ -1,0 +1,53 @@
+{
+  "name": "logisim-mcp",
+  "version": "1.3.0",
+  "description": "MCP server for Logisim-evolution 5.x — build, simulate, lint and verify digital-logic circuits (.circ) from any agent",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "logisim",
+    "logisim-evolution",
+    "digital-logic",
+    "circuit",
+    "logic-gate",
+    "eda",
+    "ai-agent",
+    "claude",
+    "cursor",
+    "cline"
+  ],
+  "license": "MIT",
+  "author": "None-wu",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/None-wu/logisim-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/None-wu/logisim-mcp/issues"
+  },
+  "homepage": "https://github.com/None-wu/logisim-mcp#readme",
+  "bin": {
+    "logisim-mcp": "bin/logisim-mcp.js"
+  },
+  "files": [
+    "bin/",
+    "logisim_mcp/",
+    "examples/",
+    "server.py",
+    "pyproject.toml",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "scripts": {
+    "start": "node bin/logisim-mcp.js",
+    "doctor": "node bin/logisim-mcp.js --doctor",
+    "test": "node test/smoke.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
